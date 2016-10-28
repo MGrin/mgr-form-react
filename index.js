@@ -208,7 +208,7 @@ var Form = function (_React$Component) {
                     { htmlFor: control.id },
                     control.label
                   ),
-                  _react2.default.createElement('input', {
+                  _react2.default.createElement('textarea', {
                     type: control.type || 'text',
                     placeholder: control.placeholder,
                     id: control.id,
