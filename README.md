@@ -98,7 +98,7 @@ export default TestComponent = () => {
 An ordered array of controls that should be rendered inside the form.
 Every array element should be an object containing following fields:
   * element: *String*, **required**.
-  Possible values: `'input'`, `'select'`.
+  Possible values: `'input'`, `'select'`, `'textarea'`.
   Defines the form control element.
   * id: *String*, **required**.
   Sets the id to the form control DOM element.
@@ -116,18 +116,18 @@ Every array element should be an object containing following fields:
   Applicable only when `element = 'select'`.
   * placeholder: *String*. Default: `null`
   Defines the placeholder.
-  Applicable only when `element = 'input'`.
+  Applicable only when `element = 'input'` and `element = 'textarea'`.
   * type: *String*.
   Possible values: [Input types](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-type).
   Default: `text`.
   Defines the input type attribute.
-  Applicable only when `element = 'input'`.
+  Applicable only when `element = 'input'` and `element = 'textarea'`.
   * validator: _RegExp_.
   Defines the RegExp that validates the content of the form control.
-  Applicable only when `element = 'input'`.
+  Applicable only when `element = 'input'` and `element = 'textarea'`.
   * formatError: *String*. Default: `'Wrong format'`.
   Defines the error message that will be shown if the form control value is not validated by the validator RegExp.
-  Applicable only when `element = 'input'`.
+  Applicable only when `element = 'input'` and `element = 'textarea'`.
 * `submit`: `PropTypes.object.isRequired`
 An object defining the look and behavior of the submit button.
 Should contain following fields:
