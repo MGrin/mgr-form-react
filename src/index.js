@@ -143,7 +143,7 @@ export default class Form extends React.Component {
           case 'textarea': {
             return (<div className={controlClassName} key={control.id}>
               <label htmlFor={control.id}>{control.label}</label>
-              <input
+              <textarea
                 type={control.type || 'text'}
                 placeholder={control.placeholder}
                 id={control.id}
