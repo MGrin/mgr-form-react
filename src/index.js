@@ -6,13 +6,15 @@ const initStateMap = (state, errors = {}) => (control) => {
     : errors[control.id];
 
   switch (control.element) {
-    case 'input': {
+    case 'input':
+    case 'textarea': {
       state[control.id] = {
         value: control.default || '',
         error
       };
       break;
     }
+
     case 'select': {
       state[control.id] = {
         value: control.default || control.options[0],
@@ -20,6 +22,7 @@ const initStateMap = (state, errors = {}) => (control) => {
       };
       break;
     }
+
     default: {
       console.warning(`Control ${control.element} is unknown.`);
     }
@@ -125,7 +128,7 @@ export default class Form extends React.Component {
             return (<div className={controlClassName} key={control.id}>
               <label htmlFor={control.id}>{control.label}</label>
               <input
-                type={control.type || text}
+                type={control.type || 'text'}
                 placeholder={control.placeholder}
                 id={control.id}
                 disabled={!editable}
@@ -135,6 +138,19 @@ export default class Form extends React.Component {
               {this.state[control.id].error
                 ? <label htmlFor={control.id}>{this.state[control.id].error}</label>
                 : <div />}
+            </div>);
+          }
+          case 'textarea': {
+            return (<div className={controlClassName} key={control.id}>
+              <label htmlFor={control.id}>{control.label}</label>
+              <input
+                type={control.type || 'text'}
+                placeholder={control.placeholder}
+                id={control.id}
+                disabled={!editable}
+                onInput={this.handleInput(control.id)}
+                value={this.state[control.id].value}
+                />
             </div>);
           }
           case 'select': {
