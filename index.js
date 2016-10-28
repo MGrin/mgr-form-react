@@ -116,7 +116,7 @@ export default class Form extends React.Component {
       {controls.map((control) => {
         const controlClassName = `
               mgrform-form-control
-              ${this.state[control.id].error ? ' mgrform-has-error' : ''}
+              ${this.state[control.id].error ? ' mgrform-has-error ' : ' '}
               ${control.class ? control.class : ''}
             `;
 
@@ -125,7 +125,7 @@ export default class Form extends React.Component {
             return (<div className={controlClassName} key={control.id}>
               <label htmlFor={control.id}>{control.label}</label>
               <input
-                type={control.type}
+                type={control.type || text}
                 placeholder={control.placeholder}
                 id={control.id}
                 disabled={!editable}
@@ -157,7 +157,7 @@ export default class Form extends React.Component {
         }
       })}
       <button
-        className="btn"
+        className={`mgrform-submit-btn ${submit.class ? submit.class : ''}`}
         onClick={this.handleSubmit}
         disabled={!submittable}>
         {submit.text}
@@ -173,7 +173,7 @@ Form.propTypes = {
   controls: PropTypes.array.isRequired,
   submit: PropTypes.object.isRequired,
 
-  errors: PropTypes.any,
+  errors: PropTypes.object,
   editable: PropTypes.bool
 };
 
