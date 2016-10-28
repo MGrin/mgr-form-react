@@ -25,6 +25,7 @@ var initStateMap = function initStateMap(state) {
 
     switch (control.element) {
       case 'input':
+      case 'textarea':
         {
           state[control.id] = {
             value: control.default || '',
@@ -32,6 +33,7 @@ var initStateMap = function initStateMap(state) {
           };
           break;
         }
+
       case 'select':
         {
           state[control.id] = {
@@ -40,9 +42,10 @@ var initStateMap = function initStateMap(state) {
           };
           break;
         }
+
       default:
         {
-          console.warning('Control ' + control.element + ' is unknown.');
+          console.warn('Control ' + control.element + ' is unknown.');
         }
     }
   };
@@ -181,7 +184,7 @@ var Form = function (_React$Component) {
                     control.label
                   ),
                   _react2.default.createElement('input', {
-                    type: control.type || text,
+                    type: control.type || 'text',
                     placeholder: control.placeholder,
                     id: control.id,
                     disabled: !editable,
@@ -193,6 +196,26 @@ var Form = function (_React$Component) {
                     { htmlFor: control.id },
                     _this5.state[control.id].error
                   ) : _react2.default.createElement('div', null)
+                );
+              }
+            case 'textarea':
+              {
+                return _react2.default.createElement(
+                  'div',
+                  { className: controlClassName, key: control.id },
+                  _react2.default.createElement(
+                    'label',
+                    { htmlFor: control.id },
+                    control.label
+                  ),
+                  _react2.default.createElement('input', {
+                    type: control.type || 'text',
+                    placeholder: control.placeholder,
+                    id: control.id,
+                    disabled: !editable,
+                    onInput: _this5.handleInput(control.id),
+                    value: _this5.state[control.id].value
+                  })
                 );
               }
             case 'select':
@@ -225,7 +248,7 @@ var Form = function (_React$Component) {
               }
             default:
               {
-                console.warning('Control ' + control.element + ' is unknown.');
+                console.warn('Control ' + control.element + ' is unknown.');
                 return _react2.default.createElement('div', null);
               }
           }
