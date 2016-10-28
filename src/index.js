@@ -24,7 +24,7 @@ const initStateMap = (state, errors = {}) => (control) => {
     }
 
     default: {
-      console.warning(`Control ${control.element} is unknown.`);
+      console.warn(`Control ${control.element} is unknown.`);
     }
   }
 };
@@ -167,7 +167,7 @@ export default class Form extends React.Component {
             </div>);
           }
           default: {
-            console.warning(`Control ${control.element} is unknown.`);
+            console.warn(`Control ${control.element} is unknown.`);
             return <div />;
           }
         }
