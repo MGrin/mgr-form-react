@@ -1,6 +1,6 @@
 {
   "name": "mgr-form-react",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Simple react form component. Generates a form based on json description",
   "main": "index.js",
   "repository": {
