@@ -79,7 +79,8 @@ const TestComponent = () => {
     text: 'Submit button text',
     cb: (data) => {
       console.log(data);
-    }
+    },
+    clean: true
   };
 
   const errors = {
@@ -144,6 +145,8 @@ Should contain following fields:
   The function should take one argument, `data`, which is an object containing form values associated to the control's id or to the data field's value of the control.
   * class: *String*.
   Defines the CSS class that will be used for the submit button.
+  * clean: *Boolean*.
+  Defines if the form should be cleaned up to default values after submit.
 * `errors`: `PropTypes.object`
 An object containing errors that should be shown on the form.
 You can define one error per one control by putting this error into your errors object under the control's id key.
@@ -162,7 +165,7 @@ Defines if the form is editable or not.
 The form has the following structure in CSS:
 * `.mgrform-form`: wrapper class.
   * `.mgrform-form-control`: one control wrapper class.
-  Can be suffixed by the `.mgrform-has-error` class in case of having erro for this control and by user defined class in the controls array.  
+  Can be suffixed by the `.mgrform-has-error` class in case of having erro for this control and by user defined class in the controls array.
     - `label` element that contains label text for the form control.
     - `input` or `select` element.
     - `label` element that is shown only if there is an error for this form control.

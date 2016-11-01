@@ -10,6 +10,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _deepEqual = require('deep-equal');
+
+var _deepEqual2 = _interopRequireDefault(_deepEqual);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -73,6 +77,10 @@ var Form = function (_React$Component) {
   _createClass(Form, [{
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
+      if ((0, _deepEqual2.default)(nextProps, this.props)) {
+        return;
+      }
+
       var state = {};
       var errors = nextProps.errors || {};
 
@@ -115,7 +123,7 @@ var Form = function (_React$Component) {
       return function (e) {
         var newState = {};
         newState[id] = {
-          value: e.target.selected
+          value: e.target.value
         };
 
         _this3.setState(newState);
@@ -132,12 +140,28 @@ var Form = function (_React$Component) {
         var control = _this4.props.controls.find(function (ctrl) {
           return ctrl.id === key;
         });
-        if (control && control.data) {
-          data[control.data] = _this4.state[key].value;
-        }
+        if (!control) return;
+
+        data[control.data || control.id] = _this4.state[key].value;
       });
 
-      return this.props.submit.cb(data);
+      var submitFn = void 0;
+      if (this.props.submit && this.props.submit.cb) {
+        submitFn = this.props.submit.cb;
+      } else {
+        submitFn = function submitFn() {};
+      }
+
+      if (this.props.submit.clean) {
+        var state = {};
+        var errors = this.props.errors || {};
+
+        this.props.controls.forEach(initStateMap(state, errors));
+
+        this.setState(state);
+      }
+
+      return submitFn(data);
     }
   }, {
     key: 'render',
@@ -188,12 +212,12 @@ var Form = function (_React$Component) {
                     placeholder: control.placeholder,
                     id: control.id,
                     disabled: !editable,
-                    onInput: _this5.handleInput(control.id),
+                    onChange: _this5.handleInput(control.id),
                     value: _this5.state[control.id].value
                   }),
                   _this5.state[control.id].error ? _react2.default.createElement(
                     'label',
-                    { htmlFor: control.id },
+                    { className: 'mgrform-label-error', htmlFor: control.id },
                     _this5.state[control.id].error
                   ) : _react2.default.createElement('div', null)
                 );
@@ -213,9 +237,14 @@ var Form = function (_React$Component) {
                     placeholder: control.placeholder,
                     id: control.id,
                     disabled: !editable,
-                    onInput: _this5.handleInput(control.id),
+                    onChange: _this5.handleInput(control.id),
                     value: _this5.state[control.id].value
-                  })
+                  }),
+                  _this5.state[control.id].error ? _react2.default.createElement(
+                    'label',
+                    { className: 'mgrform-label-error', htmlFor: control.id },
+                    _this5.state[control.id].error
+                  ) : _react2.default.createElement('div', null)
                 );
               }
             case 'select':
