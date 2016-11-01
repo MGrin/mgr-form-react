@@ -10,9 +10,10 @@ npm install mgr-form-react --save
 Since it is a React module, I suppose you have the webpack and bable configured.
 ## Minimal configurations example:
 ```js
+import React from 'react';
 import Form from 'mgr-form-react';
 
-export default TestComponent = () => {
+const TestComponent = () => {
   const controls = [
     {
       element: 'input',
@@ -41,13 +42,16 @@ export default TestComponent = () => {
                errors={errors}
                editable={editable} />;
 }
+
+export default TestComponent;
 ```
 
 ## Full configurations example:
 ```js
+import React from 'react';
 import Form from 'mgr-form-react';
 
-export default TestComponent = () => {
+const TestComponent = () => {
   const controls = [
     {
       element: 'input',
@@ -90,6 +94,8 @@ export default TestComponent = () => {
                errors={errors}
                editable={editable} />;
 }
+
+export default TestComponent;
 ```
 
 # Documentation
