@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import equal from 'deep-equal';
 
 const initStateMap = (state, errors = {}) => (control) => {
   const error = control.validator && !control.validator.test(control.default || '')
@@ -43,6 +44,10 @@ export default class Form extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (equal(nextProps, this.props)) {
+      return;
+    }
+
     const state = {};
     const errors = nextProps.errors || {};
 
@@ -77,7 +82,7 @@ export default class Form extends React.Component {
     return (e) => {
       const newState = {};
       newState[id] = {
-        value: e.target.selected
+        value: e.target.value
       };
 
       this.setState(newState);
@@ -89,12 +94,28 @@ export default class Form extends React.Component {
 
     Object.keys(this.state).forEach((key) => {
       const control = this.props.controls.find(ctrl => ctrl.id === key);
-      if (control && control.data) {
-        data[control.data] = this.state[key].value;
-      }
+      if (!control) return;
+
+      data[control.data || control.id] = this.state[key].value;
     });
 
-    return this.props.submit.cb(data);
+    let submitFn;
+    if (this.props.submit && this.props.submit.cb) {
+      submitFn = this.props.submit.cb;
+    } else {
+      submitFn = () => {};
+    }
+
+    if (this.props.submit.clean) {
+      const state = {};
+      const errors = this.props.errors || {};
+
+      this.props.controls.forEach(initStateMap(state, errors));
+
+      this.setState(state);
+    }
+
+    return submitFn(data);
   }
 
   render() {
@@ -132,11 +153,11 @@ export default class Form extends React.Component {
                 placeholder={control.placeholder}
                 id={control.id}
                 disabled={!editable}
-                onInput={this.handleInput(control.id)}
+                onChange={this.handleInput(control.id)}
                 value={this.state[control.id].value}
                 />
               {this.state[control.id].error
-                ? <label htmlFor={control.id}>{this.state[control.id].error}</label>
+                ? <label className="mgrform-label-error" htmlFor={control.id}>{this.state[control.id].error}</label>
                 : <div />}
             </div>);
           }
@@ -148,9 +169,12 @@ export default class Form extends React.Component {
                 placeholder={control.placeholder}
                 id={control.id}
                 disabled={!editable}
-                onInput={this.handleInput(control.id)}
+                onChange={this.handleInput(control.id)}
                 value={this.state[control.id].value}
                 />
+              {this.state[control.id].error
+                ? <label className="mgrform-label-error" htmlFor={control.id}>{this.state[control.id].error}</label>
+                : <div />}
             </div>);
           }
           case 'select': {
