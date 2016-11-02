@@ -171,9 +171,10 @@ var Form = function (_React$Component) {
       var props = this.props;
 
       var editable = props.editable,
-          errors = props.errors;
-      var controls = props.controls,
-          submit = props.submit;
+          errors = props.errors,
+          controls = props.controls,
+          submit = props.submit,
+          className = props.className;
 
 
       var submittable = Object.keys(this.state).reduce(function (acc, id) {
@@ -190,9 +191,10 @@ var Form = function (_React$Component) {
         return acc;
       }, 0) === 0;
 
+      var wrapperClass = 'mgrform-form ' + (className ? className : '');
       return _react2.default.createElement(
         'div',
-        { className: 'mgrform-form' },
+        { className: wrapperClass },
         controls.map(function (control) {
           var controlClassName = '\n              mgrform-form-control\n              ' + (_this5.state[control.id].error ? ' mgrform-has-error ' : ' ') + '\n              ' + (control.class ? control.class : '') + '\n            ';
 
@@ -309,6 +311,7 @@ Form.propTypes = {
   controls: _react.PropTypes.array.isRequired,
   submit: _react.PropTypes.object.isRequired,
 
+  className: _react.PropTypes.string,
   errors: _react.PropTypes.object,
   editable: _react.PropTypes.bool
 };

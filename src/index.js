@@ -121,8 +121,7 @@ export default class Form extends React.Component {
   render() {
     const props = this.props;
 
-    const { editable, errors } = props;
-    const { controls, submit } = props;
+    const { editable, errors, controls, submit, className } = props;
 
     const submittable = Object.keys(this.state).reduce((acc, id) => {
       const control = this.props.controls.find(cntrl => cntrl.id === id);
@@ -136,7 +135,8 @@ export default class Form extends React.Component {
       return acc;
     }, 0) === 0;
 
-    return (<div className="mgrform-form">
+    const wrapperClass = `mgrform-form ${className ? className : ''}`
+    return (<div className={wrapperClass}>
       {controls.map((control) => {
         const controlClassName = `
               mgrform-form-control
@@ -213,6 +213,7 @@ Form.propTypes = {
   controls: PropTypes.array.isRequired,
   submit: PropTypes.object.isRequired,
 
+  className: PropTypes.string,
   errors: PropTypes.object,
   editable: PropTypes.bool
 };

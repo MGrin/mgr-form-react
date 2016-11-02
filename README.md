@@ -160,14 +160,16 @@ Example:
 ```
 * `editable`: `PropTypes.bool`
 Defines if the form is editable or not.
+* `className`: `PropTypes.string`
+CSS class that will be appended to the `mgrform-form` wrapper class
 
 ## Styling
 The form has the following structure in CSS:
-* `.mgrform-form`: wrapper class.
+* `.mgrform-form`: wrapper class, can be suffixed by a custom class from component properties.
   * `.mgrform-form-control`: one control wrapper class.
   Can be suffixed by the `.mgrform-has-error` class in case of having erro for this control and by user defined class in the controls array.
     - `label` element that contains label text for the form control.
-    - `input` or `select` element.
+    - `input` or `select` or `textarea` element.
     - `label` element that is shown only if there is an error for this form control.
   * `.mgrform-submit-btn`: submit button class. Can be suffixed by the user defined class.
   * `.mgrform-error`: general error div class.
