@@ -28,6 +28,7 @@
     "nodemon": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "react-highlight": "^0.9.0",
     "webpack": "latest"
   },
   "devDependencies": {

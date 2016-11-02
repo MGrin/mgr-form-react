@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import Highlight from 'react-highlight';
 
 import Form from '../../../index.js';
 import * as forms from './forms';
@@ -26,13 +27,13 @@ class ExamplesForm extends React.Component {
     const controls = [{
       element: 'select',
       id: 'Examples.Select',
-      label: 'An example form:',
+      label: 'Select example form:',
       options: Object.keys(forms).filter(form => form ? true : false),
       data: 'title'
     }];
 
     const submit = {
-      text: 'Update',
+      text: 'Show',
       cb: this.handleExampleFormUpdate
     };
 
@@ -43,6 +44,11 @@ class ExamplesForm extends React.Component {
         errors={form.errors}
         submit={form.submit}
         editable={form.editable} />
+      <div className="source">
+        <Highlight className="javascript">
+          {form.sourceCode || "No source code found"}
+        </Highlight>
+      </div>
     </div>);
   }
 }
