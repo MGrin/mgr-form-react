@@ -1,6 +1,8 @@
 # mgr-form-react
 Simple react form component. Generates a form based on json description
 
+## Example: [mgr-form-react](https://mgrin.github.io/mgr-form-react/)
+
 # How to install
 ```
 npm install mgr-form-react --save
