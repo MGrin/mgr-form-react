@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FIELD_RENDERER_PROPS, SUBMISSION_RENDERER_PROPS } from '../props';
+import { FIELD_RENDERER_PROPS } from '../props';
 
 export const input = ({ value, className, fieldNameAsCss, validate, disabled, onValueChange, ...otherProps }) => (
   <input
     value={value}
     className={`${className} ${className}-renderer ${className}-${fieldNameAsCss}-renderer`}
-    onChange={({ target: { value }}) => onValueChange(value)}
-    onBlur={validate}
+    onChange={({ target: { value }}) => {
+      onValueChange(value);
+      validate(value);
+    }}
     disabled={disabled}
     {...otherProps}
     />
@@ -18,8 +20,10 @@ export const select = ({ value, className, fieldNameAsCss, validate, disabled, o
   <select
     value={value}
     className={`${className} ${className}-renderer ${className}-${fieldNameAsCss}-renderer`}
-    onChange={({ target: { value }}) => onValueChange(value)}
-    onBlur={validate}
+    onChange={({ target: { value }}) => {
+      onValueChange(value);
+      validate(value);
+    }}
     disabled={disabled}
     {...otherProps}>
     {options.map((option, idx) => (
@@ -39,22 +43,3 @@ select.propTypes = {
   ).isRequired,
 };
 
-export const submissionButton = ({ className, data, disabled, clear, label }) => (
-  <button
-    className={`${className} ${className}-button`}
-    disabled={disabled}
-    onClick={() => {
-      console.log(data);
-      clear();
-    }}>
-    {label}
-  </button>
-);
-
-submissionButton.inputProps = {
-  ...SUBMISSION_RENDERER_PROPS,
-  label: PropTypes.string,
-};
-submissionButton.defaultProps = {
-  label: 'Submit',
-};

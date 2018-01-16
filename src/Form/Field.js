@@ -18,7 +18,9 @@ const Field = ({ name, label, value, error, disabled, hidden, className, render,
           fieldNameAsCss={fieldNameAsCss}
           {...fieldRendererProps} />
       </div>
-      <label className={`${className} ${className}-error-label ${className}-${fieldNameAsCss}-error-label ${!error ? 'hidden' : ''}`}>{error || ''}</label>
+      <label className={`${className} ${className}-error-label ${className}-${fieldNameAsCss}-error-label ${!error ? 'hidden' : ''}`}>
+        {error ? JSON.stringify(error) : ''}
+      </label>
     </div>
   );
 };
@@ -27,7 +29,7 @@ Field.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   value: PropTypes.any,
-  error: PropTypes.string,
+  error: PropTypes.arrayOf(PropTypes.string),
   disabled: PropTypes.bool,
   hidden: PropTypes.bool,
   className: PropTypes.string,

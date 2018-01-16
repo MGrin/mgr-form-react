@@ -38,7 +38,7 @@ const formDescription = {
     hide: (data, errors) => errors['required'] ? true : false,
   }],
   submission: {
-    renderer: 'submissionButton',
+    renderer: 'button',
     label: 'Lalala',
   },
 };

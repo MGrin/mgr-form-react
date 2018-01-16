@@ -1,14 +1,12 @@
-import * as defaultRenderers from './renderers';
+import * as defaultFieldRenderers from './fields';
+import * as defaultSubmissionRenderers from './submissions';
+import { registerToStore } from '../utils';
 
-export const renderers = new Map();
+export const fieldRenderers = new Map();
+export const submissionRenderers = new Map();
 
-export const registerRenderer = (name, render) => {
-  if (!name) throw new Error('Provide a transformation name');
-  if (!render) throw new Error('Provide a transformation function');
-  if (typeof(render) !== 'function') throw new Error('Transformation should be a function');
-  if (renderers.has(name)) console.warn(`Transformation called ${name} is already registered and will be overrided`);
+export const registerFieldRenderer = (name, render) => registerToStore(fieldRenderers, 'Field renderer', name, render);
+export const registerSubmissionRenderer = (name, render) => registerToStore(submissionRenderers, 'Submission renderer', name, render);
 
-  renderers.set(name, render);
-};
-
-Object.keys(defaultRenderers).forEach(render => registerRenderer(render, defaultRenderers[render]));
+Object.keys(defaultFieldRenderers).forEach(render => registerFieldRenderer(render, defaultFieldRenderers[render]));
+Object.keys(defaultSubmissionRenderers).forEach(render => registerSubmissionRenderer(render, defaultSubmissionRenderers[render]));

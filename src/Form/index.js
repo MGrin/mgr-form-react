@@ -2,10 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Field from './Field';
-import { compose, transformToArray } from '../utils';
-import { renderers as renderersMap} from '../rendering';
+import {
+  constructStateFromDescription,
+  validateField,
+  updateStateAfterValidation,
+  isFormValid,
+  getSubmissionProps,
+  cleanFieldProps,
+} from './utils';
+import { compose } from '../utils';
+import { fieldRenderers, submissionRenderers } from '../rendering';
 import { transformations as transformationsMap } from '../transformation';
-import { validators as validatorsMap, validateFormDescription } from '../validation';
+import { validateFormDescription } from '../validation';
 
 import { DESCRIPTION } from '../props';
 
@@ -25,42 +33,23 @@ export default class MGRForm extends Component {
   }
 
   componentWillReceiveProps(props) {
-    this.validateProps(props);
+    this.processInitialProps(props);
   }
 
   componentWillMount() {
-    this.validateProps(this.props);
+    this.processInitialProps(this.props);
   }
 
-  validateProps = ({ description, validate }) => {
+  // componentDidCatch(error) {
+  //   console.error(error);
+  // }
+
+  processInitialProps = ({ description, validate }) => {
     if (validate) validateFormDescription({ fields: description.fields, submission: description.submission });
-
-    const values = description.fields.reduce((acc, field) => ({
-      ...acc,
-      [field.name]: field.defaultValue || '',
-    }), {});
-
-    const errors = description.fields.reduce((acc, field) => ({
-      ...acc,
-      [field.name]: this.validateField(field.name, field.validators, false)(values[field.name]),
-    }), {});
-
-    const disabled = description.fields.reduce((acc, field) => ({
-      ...acc,
-      [field.name]: field.disable ? field.disable(values, errors) : false,
-    }), {});
-
-    const hidden = description.fields.reduce((acc, field) => ({
-      ...acc,
-      [field.name]: field.hide ? field.hide(values, errors) : false,
-    }), {});
 
     initialState = {
       ...initialState,
-      values,
-      errors,
-      disabled,
-      hidden,
+      ...constructStateFromDescription(description),
     };
 
     this.setState(initialState);
@@ -76,61 +65,33 @@ export default class MGRForm extends Component {
     }), () => cb(this.state));
   }
 
-  validateField = (field, validatorsSource = [], dispatch = true) => (val) => {
-    const validators = transformToArray(validatorsSource);
-    
-    const value = val || this.state.values[field];
-    let error = '';
+  validateField = (field, validatorsSource) => (val) => {
+    const value = typeof(val) === 'string' ? val : this.state.values[field];
+    const errorsUpdate = validateField(field, validatorsSource)(value);
 
-    for (let i = 0; i < validators.length; i++) {
-      const err = validatorsMap.get(validators[i])(value);
-      if (err) error = error + '\n' + err;
-    }
-
-    const errorsUpdate = {
-      [field]: error ? error : null,
-    };
-
-    if (dispatch) this.dispatch('errors', errorsUpdate, this.updateHiddenAndDisabled);
-    else return errorsUpdate[field];
+    this.dispatch('errors', errorsUpdate, this.updateStateAfterValidation);
   }
 
-  updateHiddenAndDisabled = (state) => {
-    const { fields } = this.props.description;
-    let valuesUpdate = {};
-    let errorsUpdate2 = {};
-
-    const isDisabled = (field) => {
-      const res = field.disable(state.values, state.errors);
-      if (res) errorsUpdate2[field.name] = null;
-
-      return res;
-    };
-
-    const isHidden = (field) => {
-      const res = field.hide(state.values, state.errors);
-      if (res) {
-        errorsUpdate2[field.name] = null;
-        valuesUpdate[field.name] = '';
-      }
-
-      return res;
-    }
-
-    const disabledUpdate = fields.reduce((acc, field) => ({
-      ...acc,
-      [field.name]: field.disable ? isDisabled(field) : false,
-    }), {});
-
-    const hiddenUpdate = fields.reduce((acc, field) => ({
-      ...acc,
-      [field.name]: field.hide ? isHidden(field) : false,
-    }), {});
-
-    this.dispatch('disabled', disabledUpdate);
-    this.dispatch('hidden', hiddenUpdate);
-    this.dispatch('values', valuesUpdate);
-    this.dispatch('errors', errorsUpdate2);
+  updateStateAfterValidation = (state) => {
+    const stateUpdates = updateStateAfterValidation(state, this.props.description);
+    this.setState(currentState => ({
+      values: {
+        ...currentState.values,
+        ...stateUpdates.values,
+      },
+      errors: {
+        ...currentState.errors,
+        ...stateUpdates.errors,
+      },
+      disabled: {
+        ...currentState.disabled,
+        ...stateUpdates.disabled,
+      },
+      hidden: {
+        ...currentState.hidden,
+        ...stateUpdates.hidden,
+      },
+    }));
   }
 
   onValueChange = (field, transform) => value => {
@@ -143,28 +104,21 @@ export default class MGRForm extends Component {
     this.setState(initialState);
   }
 
-  canSubmit = () => {
-    const errors = { ...this.state.errors };
-    return Object
-      .keys(errors)
-      .reduce((acc, field) => !(errors[field]) && acc, true);
-  }
+  canSubmit = () => isFormValid(this.state.errors);
 
   render() {
     const { errors, values, disabled, hidden } = this.state;
     const { fields, submission } = this.props.description;
     const { classNames } = this.props;
 
-    const Submission = renderersMap.get(submission.renderer);
-    const submissionProps = { ...submission };
-    delete submissionProps.renderer;
+    const Submission = submissionRenderers.get(submission.renderer);
+    const submissionProps = getSubmissionProps(submission);
     
     return (
       <div className={`${classNames.form} ${classNames.form}-wrapper`}>
-        {fields.map(({ name, label, renderer, transformations, validators, ...fieldProps}, idx) => {
-          delete fieldProps.defaultValue;
-          delete fieldProps.disable;
-          delete fieldProps.hide;
+        {fields.map(({ name, label, renderer, transformations, validators, ...rawFieldProps}, idx) => {
+          const fieldProps = cleanFieldProps(rawFieldProps);
+          const rendererFunction = fieldRenderers.get(renderer);
 
           return (
             <Field
@@ -176,7 +130,7 @@ export default class MGRForm extends Component {
               disabled={disabled[name]}
               hidden={hidden[name]}
               className={classNames.field}
-              render={renderersMap.get(renderer)}
+              render={rendererFunction}
               validate={this.validateField(name, validators)}
               onValueChange={this.onValueChange(name, composeTransformations(transformations))}
               {...fieldProps}
