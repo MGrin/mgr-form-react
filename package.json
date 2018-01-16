@@ -10,7 +10,7 @@
   "scripts": {
     "build": "webpack --env dev && webpack --env build && npm run test",
     "build:dev": "npm run build && cp dist/mgr-form-react.js example/src/lib/index.js",
-    "test": "TESTING=1 jest --coverage",
+    "test": "TESTING=1 jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "test:watch": "TESTING=1 jest --watch"
   },
   "author": "MGrin",
@@ -26,12 +26,14 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
+    "coveralls": "^3.0.0",
     "css-loader": "^0.28.8",
     "eslint": "^4.15.0",
     "eslint-loader": "^1.9.0",
     "eslint-plugin-react": "^7.5.1",
     "jest": "^22.0.6",
     "prop-types": "^15.6.0",
+    "style-loader": "^0.19.1"
     "react": "^16.0.0",
     "webpack": "^3.10.0"
   },
@@ -40,8 +42,6 @@
     "react": "^16.0.0"
   },
   "dependencies": {
-    "style-loader": "^0.19.1"
   },
-  "jest": {
-  }
+  "jest": {}
 }
