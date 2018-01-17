@@ -65,4 +65,12 @@ export default () => (
 To see more examples, please refer to the documentation.
 
 # Documentation
-Coming soon
+This package exports a `<Form />` component by default and some usefull functions:
+
+* [Form](https://github.com/MGrin/mgr-form-react/tree/master/src/Form/README.md) - component exported by default. It is the only exported react component taking the form description in props. Refer to its documentation for more information.
+* [validateFormDescription](https://github.com/MGrin/mgr-form-react/tree/master/src/validation/README.md#Description) - function that validates the form description. You can use it to validate a form description provided by server or vie third party provider. Read more about this validation function and the shape of description in the validation documentation.
+* [registerValidator](https://github.com/MGrin/mgr-form-react/tree/master/src/validation/README.md#Register) - function that registers the validation function to be used in a form. Refer to its documentation for more information.
+* [registerTransformation](https://github.com/MGrin/mgr-form-react/tree/master/src/transformation/README.md) - function that registers the transformation function to be used in a form. Refer to its documentation for more information.
+* [registerFieldRenderer](https://github.com/MGrin/mgr-form-react/tree/master/src/rendering/README.md#Field) - function that registers the rendering function to be used in a form in order to render a field. Refer to its documentation for more information.
+* [registerSubmissionRenderer](https://github.com/MGrin/mgr-form-react/tree/master/src/rendering/README.md#Submission) - function that registers the rendering function to be used in a form in order to render the submission part. Refer to its documentation for more information.
+* [FIELD_RENDERER_PROPS, SUBMISSION_RENDERER_PROPS](https://github.com/MGrin/mgr-form-react/tree/master/src/rendering/README.md#PropTypes) - Prop. types definitions that describe minimal set of props that should be passed to a rendering functions. Refer to its documentation for more information.
