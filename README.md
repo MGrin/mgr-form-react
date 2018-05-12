@@ -1,4 +1,5 @@
 # mgr-form-react
+## Work in progress, please do not consider it yet as a working module
 [![Coverage Status](https://coveralls.io/repos/github/MGrin/mgr-form-react/badge.svg)](https://coveralls.io/github/MGrin/mgr-form-react)
 
 ## Version until 0.0.5 are DEPRICATED!!! No support will follow.
