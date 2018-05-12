@@ -44,7 +44,7 @@ export default () => (
     }, {
       name: 'age',
       label: 'Your age',
-      renderer: 'selector',
+      renderer: 'select',
       defaultValue: 1,
 
       options: [{
